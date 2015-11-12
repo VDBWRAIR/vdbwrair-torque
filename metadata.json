@@ -1,0 +1,29 @@
+{
+  "name": "vdbwrair-torque",
+  "version": "0.0.1",
+  "author": "Tyghe Vallard",
+  "summary": "Module for managing Torque",
+  "license": "Apache License, Version 2.0",
+  "source": "https://github.com/VDBWRAIR/vdbwrair-torque.git",
+  "project_page": "https://github.com/VDBWRAIR/vdbwrair-torque",
+  "issues_url": "https://github.com/VDBWRAIR/vdbwrair-torque/issues",
+  "description": "Torque is an open-source version of PBS",
+  "dependencies": [
+    {
+      "name": "puppetlabs-concat",
+      "version_requirement": ">= 1.2.3"
+    },
+    {
+      "name": "spiette-selinux",
+      "version_requirement": ">= 0.5.4"
+    },
+    {
+      "name": "puppetlabs-stdlib",
+      "version_requirement": ">= 2.0.0"
+    },
+    {
+      "name": "augeasproviders",
+      "version_requirement": ">= 1.2.0"
+    }
+  ]
+}
