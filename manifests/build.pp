@@ -41,7 +41,7 @@ class torque::build inherits torque {
         command => "/usr/bin/make packages",
         creates => "${torque::build_dir}/torque-package-clients-linux-x86_64.sh",
         cwd => $torque::build_dir,
-        require => Exec["make_packages_${torque::version}"]
+        require => Exec["make_${torque::version}"]
     }
     exec {"install_torque_docs_${torque::version}":
         command => "${torque::build_dir}/torque-package-doc-linux-x86_64.sh --install && /bin/touch ${torque::build_dir}/torque_docs_installed",
