@@ -1,6 +1,6 @@
 # Base class inherited by all others
 #  - validates args
-#  - provides args to all other classes through inheritance
+#  - provides args to other classes through inheritance
 class torque (
     $version            = $torque::params::version,
     $build_dir          = $torque::params::build_dir,
@@ -8,6 +8,7 @@ class torque (
     $install_prefix     = $torque::params::install_prefix,
     $configure_options  = $torque::params::configure_options,
     $torque_base_url    = $torque::params::torque_base_url,
+    $pbs_environment    = $torque::params::pbs_environment,
 ) inherits torque::params {
     include stdlib
 
@@ -26,4 +27,5 @@ class torque (
         "curl -sI '%' | grep -q '200 OK'",
         "${download_url} is not a valid url"
     )
+    validate_array($pbs_environment)
 }

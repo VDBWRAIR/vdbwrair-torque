@@ -15,6 +15,13 @@ class torque::params {
     ]
     # Where to install binaries
     $install_prefix             = "/usr/local"
+    # Lines for pbs_environment file
+    $pbs_environment            = [
+        'PATH=/bin:/usr/bin',
+        'LANG=en_US.UTF-8',
+        'BASH_ENV=/etc/bashrc',
+        'ENV=/etc/bashrc'
+    ]
 
     ## Mom args
     # Any options for pbs_config file

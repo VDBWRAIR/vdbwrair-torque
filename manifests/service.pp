@@ -55,15 +55,6 @@ define torque::service(
         notify  => Service[$service_name],
     }
 
-    service { $service_name:
-        ensure     => $ensure,
-        enable     => $enable,
-        subscribe  => [
-            File["/etc/init.d/${service_name}"],
-            File["${torque_home}/server_name"],
-        ],
-    }
-
     # Search options for -L option
     $f_options = $service_options.filter |$x| { split($x,' ')[0] == '-L' }
     $log_option = $f_options[0]
@@ -78,5 +69,24 @@ define torque::service(
             mode    => '0644',
             require => Exec["/bin/mkdir -p ${log_dir}"]
         }
+        $log_require = Exec["/bin/mkdir -p ${log_dir}"]
+    } else {
+        file { "/var/log/torque":
+            ensure => directory,
+            owner  => root,
+            group  => root,
+            mode   => '0700'
+        }
+        $log_require = File["/var/log/torque"]
+    }
+
+    service { $service_name:
+        ensure     => $ensure,
+        enable     => $enable,
+        require    => $log_require,
+        subscribe  => [
+            File["/etc/init.d/${service_name}"],
+            File["${torque_home}/server_name"],
+        ],
     }
 }

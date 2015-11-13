@@ -28,6 +28,14 @@ class torque::mom::config inherits torque::mom {
         require => File["${torque::torque_home}/mom"]
     }
 
+    file { "${torque::torque_home}/mom_log":
+        ensure  => 'directory',
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0750',
+        require => File["${torque::torque_home}/mom"]
+    }
+
     file { "${torque::torque_home}/mom_priv/config":
         ensure  => 'present',
         content => template('torque/pbs_config.erb'),

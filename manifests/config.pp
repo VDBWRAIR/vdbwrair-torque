@@ -12,9 +12,6 @@ class torque::config inherits torque {
         content => template("${module_name}/pbs_environment.erb"),
         owner   => 'root',
         group   => 'root',
-        mode    => '0644',
-        require => [
-            File[$torque_home]
-        ],
+        mode    => '0644'
     }
 }
