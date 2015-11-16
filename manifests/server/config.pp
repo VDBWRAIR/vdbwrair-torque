@@ -55,15 +55,13 @@ class torque::server::config inherits torque::server {
         group   => 'root',
         mode    => '0600',
         content => template('torque/qmgr_config.erb'),
+        notify  => Exec['qmgr_update']
     }
 
-    exec { 'qmgr update':
+    exec { 'qmgr_update':
         path        => '/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin',
         command     => "cat ${torque::torque_home}/server_priv/qmgr_config | qmgr",
-        #onlyif      => "cat ${torque::torque_home}/server_priv/qmgr_config ",
-        onlyif      => "diff <(cat ${torque::torque_home}/server_priv/qmgr_config | sort) <(qmgr -c 'print server' | sort)",
-        refreshonly => true,
-        subscribe   => File["${torque::torque_home}/server_priv/qmgr_config"],
+        unless      => "bash -c \"diff <(cat ${torque::torque_home}/server_priv/qmgr_config | sort) <(qmgr -c 'print server' | sort)\"",
         logoutput   => true,
         require     => [
             Class['torque::server::install']
