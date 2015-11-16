@@ -35,7 +35,8 @@ class torque::server::config inherits torque::server {
         owner   => 'root',
         group   => 'root',
         mode    => '0755',
-        require => File["${torque::torque_home}/server_priv"]
+        require => File["${torque::torque_home}/server_priv"],
+        notify  => Exec['pbs_server_init']
     }
 
     file { "${torque::torque_home}/server_logs":
@@ -49,30 +50,32 @@ class torque::server::config inherits torque::server {
     Concat::Fragment <<| tag == "torque_server_${torque::torque_server}" |>>
     Host <<| tag == "torque_host_server_${torque::torque_server}" |>>
 
+    # Have to run -t create first otherwise first time
+    # the service runs it will destroy torque_home/server_priv
+    # This seems to destroy files inside of server_priv such as nodes and
+    # qmgr_config
+    exec { "pbs_server_init":
+        command => "/usr/local/sbin/pbs_server -f -t create -d ${torque::torque_home}",
+        creates => "${torque::torque_home}/server_priv/serverdb"
+    }
+
+
     file { "${torque::torque_home}/server_priv/qmgr_config":
         ensure  => 'present',
         owner   => 'root',
         group   => 'root',
         mode    => '0600',
         content => template('torque/qmgr_config.erb'),
-        notify  => Exec['qmgr_update']
-    }
-
-    exec { 'qmgr_update':
-        path        => '/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin',
-        command     => "cat ${torque::torque_home}/server_priv/qmgr_config | qmgr",
-        unless      => "bash -c \"diff <(cat ${torque::torque_home}/server_priv/qmgr_config | sort) <(qmgr -c 'print server' | sort)\"",
-        logoutput   => true,
-        require     => [
-            Class['torque::server::install']
-        ]
+        notify  => Exec['qmgr_update'],
+        require => Exec['pbs_server_init']
     }
 
     concat{ "${torque_home}/server_priv/nodes":
         owner  => root,
         group  => root,
         mode   => '0644',
-        notify => Service['pbs_server']
+        notify => Service['pbs_server'],
+        require => Exec['pbs_server_init']
     }
 
     file {"/etc/ld.so.conf.d/torque.conf":
