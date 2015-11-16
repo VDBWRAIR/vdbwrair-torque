@@ -1,0 +1,19 @@
+<% if !@qconfig.empty? -%>
+#
+# Create queues and set their attributes.
+#
+<%  @qconfig.keys.sort.each do |queue| -%>
+#
+# Create and define queue <%= queue %>
+#
+<%   @qconfig[queue].each do |value| -%>
+<%= value %>
+<%   end -%>
+<%  end -%>
+<% end -%>
+#
+# Set server attributes.
+#
+<% @sconfig.each do |value| -%>
+<%= value %>
+<% end -%>

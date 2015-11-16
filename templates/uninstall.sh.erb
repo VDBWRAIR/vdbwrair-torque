@@ -1,0 +1,20 @@
+#!/bin/bash
+
+cd <%= @build_dir %>
+
+# Runs make uninstaller
+make uninstall > /dev/null
+
+# Removes service files and Stops all pbs services
+for s in /etc/init.d/pbs_*
+do
+    pkill $(basename $s)
+    chkconfig $(basename $s) off
+    rm -rf $s
+done
+
+read -p "Remove <%= @torque_home %>[yn]? " doit
+if [[ "$doit" =~ /[yY]/ ]]
+then
+    rm -rf <%= @torque_home %>
+fi

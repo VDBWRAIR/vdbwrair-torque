@@ -2,6 +2,7 @@
 #  - validates args
 #  - provides args to other classes through inheritance
 class torque (
+    $torque_server      = $::fqdn,
     $version            = $torque::params::version,
     $build_dir          = $torque::params::build_dir,
     $torque_home        = $torque::params::torque_home,
@@ -16,6 +17,10 @@ class torque (
     $download_file = "${full_version}.tar.gz"
     $download_url = "${torque_base_url}/${download_file}"
 
+    validate_cmd(
+        $torque_server,
+        "ping -c 1 -i 1 -w 1 ${torque_server}"
+    )
     validate_string($version)
     validate_absolute_path($build_dir)
     validate_absolute_path($torque_home)
@@ -28,4 +33,6 @@ class torque (
         "${download_url} is not a valid url"
     )
     validate_array($pbs_environment)
+
+    include torque::config
 }

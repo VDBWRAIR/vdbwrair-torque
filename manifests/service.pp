@@ -2,7 +2,7 @@ define torque::service(
     $ensure,
     $enable,
     $service_file_source,
-    $service_options,
+    $service_options        = [],
     $torque_home            = $torque::params::torque_home,
     $use_logrotate          = $torque::params::use_logrotate
 ) {
@@ -39,7 +39,7 @@ define torque::service(
                 before => File["/etc/init.d/${service_name}"]
             }
             exec {"add_daemon_pbs_args_${service_name}":
-                command => "/bin/sed -i -E 's/(daemon \\\$PBS_DAEMON)(.*)(-d \\\$PBS_HOME)/\\1\\2\\3 \$PBS_ARGS/' ${service_file_source}",
+                command => "/bin/sed -i -E 's/(daemon \\\$PBS_DAEMON)(.*)/\\1\\2 \$PBS_ARGS/' ${service_file_source}",
                 unless => "/bin/grep -qE \'daemon.*\\\$PBS_ARGS\' ${service_file_source}",
                 before => File["/etc/init.d/${service_name}"]
             }
@@ -71,12 +71,12 @@ define torque::service(
         }
         $log_require = Exec["/bin/mkdir -p ${log_dir}"]
     } else {
-        file { "/var/log/torque":
+        ensure_resource('file',"/var/log/torque", {
             ensure => directory,
             owner  => root,
             group  => root,
             mode   => '0700'
-        }
+        })
         $log_require = File["/var/log/torque"]
     }
 

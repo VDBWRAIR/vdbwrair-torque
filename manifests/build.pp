@@ -19,10 +19,25 @@ class torque::build inherits torque {
     }
     ensure_packages($dev_packages)
 
+    file {"${torque::build_dir}/uninstall.sh":
+        ensure  => file,
+        owner   => root,
+        group   => root,
+        mode    => '0750',
+        content => template('torque/uninstall.sh.erb')
+    }
+
     exec {"download_src_${torque::version}":
         command => "/usr/bin/wget ${torque::download_url} -O- | /bin/tar xzvf -",
-        creates => $torque::build_dir,
+        creates => "${torque::build_dir}/INSTALL",
         cwd => dirname($torque::build_dir)
+    }
+    file { $build_dir:
+        ensure  => directory,
+        owner   => root,
+        group   => root,
+        mode    => '0755',
+        require => Exec["download_src_${torque::version}"]
     }
     exec {"build_${torque::version}":
         command => "${torque::build_dir}/configure ${torque::config_options}",

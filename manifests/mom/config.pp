@@ -4,20 +4,13 @@ class torque::mom::config inherits torque::mom {
     @@concat::fragment{ "torque_mom_${::fqdn}":
         target  => "${torque::torque_home}/server_priv/nodes",
         content => template("${module_name}/client.erb"),
-        tag     => 'torque'
+        tag     => "torque_server_${torque::torque_server}"
     }
     # Exports host entry for this mom
     @@host { $::fqdn:
         ip           => $::ipaddress,
         host_aliases => [$::hostname],
-        tag          => ['torque_host'],
-    }
-
-    file { "${torque::torque_home}/mom":
-        ensure => 'directory',
-        owner  => 'root',
-        group  => 'root',
-        mode   => '0755',
+        tag          => ["torque_host_server_${torque::torque_server}"],
     }
 
     file { "${torque::torque_home}/mom_priv":
@@ -25,15 +18,15 @@ class torque::mom::config inherits torque::mom {
         owner   => 'root',
         group   => 'root',
         mode    => '0751',
-        require => File["${torque::torque_home}/mom"]
+        require => Class['torque::mom::install']
     }
 
-    file { "${torque::torque_home}/mom_log":
+    file { "${torque::torque_home}/mom_logs":
         ensure  => 'directory',
         owner   => 'root',
         group   => 'root',
         mode    => '0750',
-        require => File["${torque::torque_home}/mom"]
+        require => File["${torque::torque_home}"]
     }
 
     file { "${torque::torque_home}/mom_priv/config":
@@ -43,34 +36,6 @@ class torque::mom::config inherits torque::mom {
         group   => 'root',
         mode    => '0640',
         require => File["${torque::torque_home}/mom_priv"],
-    }
-
-    file { "${torque::torque_home}/undelivered":
-        ensure => directory,
-        owner => root,
-        group => root,
-        mode => '1777',
-    }
-
-    file { "${torque::torque_home}/checkpoint":
-        ensure => directory,
-        owner => root,
-        group => root,
-        mode => '1777',
-    }
-
-    file { "${torque::torque_home}/aux":
-        ensure => directory,
-        owner  => root,
-        group  => root,
-        mode   => '0755'
-    }
-
-    file { "${torque::torque_home}/spool":
-        ensure => directory,
-        owner => root,
-        group => root,
-        mode => '1777',
     }
 
     file { "${torque::torque_home}/mom_priv/jobs":
