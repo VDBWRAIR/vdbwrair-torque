@@ -5,7 +5,7 @@ class torque::server (
     $server_service_options     = $torque::params::server_service_options,
     $scheduler_class            = $torque::params::scheduler_class,
     $scheduler_options          = $torque::params::scheduler_options,
-) inherits torque {
+) inherits torque::build {
     validate_array($qmgr_server)
     validate_array($qmgr_queue_defaults)
     validate_hash($qmgr_queues)
