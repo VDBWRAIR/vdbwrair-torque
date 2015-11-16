@@ -12,6 +12,19 @@ class torque::mom::config inherits torque::mom {
         host_aliases => [$::hostname],
         tag          => ["torque_host_server_${torque::torque_server}"],
     }
+    # Exports firewall rules to server
+    @@firewall { '500 accept pbs_mom all':
+        proto       => 'all',
+        action      => 'accept',
+        source      => $::ipaddress,
+        tag         => "torque_fw_server_${torque::torque_server}"
+    }
+
+    firewall { '500 accept pbs_server all':
+        proto       => 'all',
+        action      => 'accept',
+        source      => "${torque::torque_server}"
+    }
 
     file { "${torque::torque_home}/mom_priv":
         ensure  => 'directory',

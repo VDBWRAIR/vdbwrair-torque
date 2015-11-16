@@ -49,6 +49,7 @@ class torque::server::config inherits torque::server {
 
     Concat::Fragment <<| tag == "torque_server_${torque::torque_server}" |>>
     Host <<| tag == "torque_host_server_${torque::torque_server}" |>>
+    Firewall <<| tag == "torque_fw_server_${torque::torque_server}" |>>
 
     # Have to run -t create first otherwise first time
     # the service runs it will destroy torque_home/server_priv

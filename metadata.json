@@ -24,6 +24,10 @@
     {
       "name": "augeasproviders",
       "version_requirement": ">= 1.2.0"
-    }
+    },
+    {
+      "name": "puppetlabs-firewall",
+      "version_requirement": ">= 1.7.1"
+    },
   ]
 }
