@@ -1,4 +1,6 @@
 # torque_queues
+# Original credit goes to https://github.com/HEP-Puppet/torque
+# which has no License
 Facter.add(:torque_queues) do
   confine :osfamily => 'RedHat'
   confine :batchsystem => 'torque'

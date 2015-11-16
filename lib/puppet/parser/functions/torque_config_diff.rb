@@ -1,3 +1,5 @@
+# Original credit goes to https://github.com/HEP-Puppet/torque
+# which has no License
 module Puppet::Parser::Functions
   newfunction(:torque_config_diff, :type => :rvalue) do |args|
     req_presence = lookupvar('torque_qmgr_present')

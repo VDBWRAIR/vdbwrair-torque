@@ -1,4 +1,6 @@
 # batchsystem.rb
+# Original credit goes to https://github.com/HEP-Puppet/torque
+# which has no License
 Facter.add(:batchsystem) do
   confine :osfamily => 'RedHat'
   setcode do

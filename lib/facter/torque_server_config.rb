@@ -1,4 +1,6 @@
 # torque_server_config
+# Original credit goes to https://github.com/HEP-Puppet/torque
+# which has no License
 Facter.add(:torque_server_config) do
   confine :osfamily => 'RedHat'
   confine :batchsystem => 'torque'

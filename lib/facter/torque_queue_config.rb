@@ -1,4 +1,6 @@
 # torque_queue_config
+# Original credit goes to https://github.com/HEP-Puppet/torque
+# which has no License
 queues = Facter.value('torque_queues')
 unless queues.nil?
   queues.split(',').each do |queue|
