@@ -12,5 +12,6 @@ class torque::mom::service inherits torque::mom {
         enable => true,
         service_file_source => $service_file_source,
         service_options => $torque::mom::service_options,
+        require => Class['torque::mom::config']
     }
 }

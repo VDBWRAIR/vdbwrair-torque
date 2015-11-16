@@ -42,7 +42,8 @@ class torque::mom::config inherits torque::mom {
         ensure => directory,
         owner  => root,
         group  => root,
-        mode   => '0751'
+        mode   => '0751',
+        require => File["${torque::torque_home}/mom_priv"],
     }
 
     if $mom_options['tmpdir'] {
