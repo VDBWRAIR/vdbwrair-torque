@@ -43,7 +43,6 @@ class torque::params {
         "acl_hosts = ${::fqdn}",
         'node_check_rate = 150',
         'tcp_timeout = 6',
-        'next_job_number = 0',
         'scheduling = True',
         'acl_host_enable = False',
         "managers = root@${::fqdn}",
