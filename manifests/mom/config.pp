@@ -49,6 +49,7 @@ class torque::mom::config inherits torque::mom {
         group   => 'root',
         mode    => '0640',
         require => File["${torque::torque_home}/mom_priv"],
+        notify  => Service['pbs_mom']
     }
 
     file { "${torque::torque_home}/mom_priv/jobs":
@@ -59,7 +60,7 @@ class torque::mom::config inherits torque::mom {
         require => File["${torque::torque_home}/mom_priv"],
     }
 
-    if $mom_options['tmpdir'] {
+    if $options['tmpdir'] {
         exec {"/bin/mkdir -p ${torque::mom::options[tmpdir]}":
             unless => "/usr/bin/test -d ${torque::mom::options[tmpdir]}"
         }
@@ -68,7 +69,7 @@ class torque::mom::config inherits torque::mom {
             owner => root,
             group => root,
             mode => '1733',
-            require => Exec["/bin/mkdir -p ${torque::options[tmpdir]}"]
+            require => Exec["/bin/mkdir -p ${torque::mom::options['tmpdir']}"]
         }
     }
 }
