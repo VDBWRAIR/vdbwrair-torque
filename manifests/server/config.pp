@@ -80,7 +80,7 @@ class torque::server::config inherits torque::server {
     }
 
     file {"/etc/ld.so.conf.d/torque.conf":
-        content => "${prefix}/lib",
+        content => "${torque::install_prefix}/lib",
         mode => '0444',
     }
 }
