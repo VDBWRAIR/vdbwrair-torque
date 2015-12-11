@@ -6,8 +6,8 @@ class torque::build inherits torque {
     }
     notify{"${configure_options}":}
     notify{"${config_options}":}
-    $normalized_options = regsubst($config_options, "[^\w]|_", "", "G")
-    notify{"${normalized_options}":}
+    $norm_config_options = regsubst($config_options, "[^\w]|_", "", "G")
+    notify{"${norm_config_options}":}
 
     case $::osfamily {
         'RedHat': {
@@ -44,29 +44,29 @@ class torque::build inherits torque {
         require => Exec["download_src_${torque::version}"]
     }
     exec {"configure_${torque::version}":
-        command => "${torque::build_dir}/configure ${config_options} && /bin/touch ${torque::build_dir}/.configure_${torque::version}_${normalized_options}",
-        creates => "${torque::build_dir}/.configure_${torque::build_dir}_${torque::version}_${normalized_options}",
+        command => "${torque::build_dir}/configure ${config_options} && /bin/touch ${torque::build_dir}/.configure_${torque::version}_${norm_config_options}",
+        creates => "${torque::build_dir}/.configure_${torque::build_dir}_${torque::version}_${norm_config_options}",
         cwd => $torque::build_dir,
         require => Exec["download_src_${torque::version}"],
         notify  => Exec["make_${torque::version}"]
     }
     exec {"make_${torque::version}":
-        command => "/usr/bin/make && /bin/touch ${torque::build_dir}/.make_${torque::version}_${normalized_options}",
-        creates => "${torque::build_dir}/.make_${torque::version}_${normalized_options}",
+        command => "/usr/bin/make && /bin/touch ${torque::build_dir}/.make_${torque::version}_${norm_config_options}",
+        creates => "${torque::build_dir}/.make_${torque::version}_${norm_config_options}",
         cwd => $torque::build_dir,
         require => Exec["build_${torque::version}"],
         notify  => Exec["make_packages_${torque::version}"]
     }
 
     exec {"make_packages_${torque::version}":
-        command => "/usr/bin/make packages && /bin/touch ${torque::build_dir}/.make_packages_${torque::version}_${normalized_options}",
-        creates => "${torque::build_dir}/.make_packages_${torque::version}_${normalized_options}",
+        command => "/usr/bin/make packages && /bin/touch ${torque::build_dir}/.make_packages_${torque::version}_${norm_config_options}",
+        creates => "${torque::build_dir}/.make_packages_${torque::version}_${norm_config_options}",
         cwd => $torque::build_dir,
         require => Exec["make_${torque::version}"]
     }
     exec {"install_torque_docs_${torque::version}":
-        command => "${torque::build_dir}/torque-package-doc-linux-x86_64.sh --install && /bin/touch ${torque::build_dir}/.torque_docs_${torque::version}_${normalized_options}",
-        creates => "${torque::build_dir}/.torque_docs_${torque::version}_${normalized_options}",
+        command => "${torque::build_dir}/torque-package-doc-linux-x86_64.sh --install && /bin/touch ${torque::build_dir}/.torque_docs_${torque::version}_${norm_config_options}",
+        creates => "${torque::build_dir}/.torque_docs_${torque::version}_${norm_config_options}",
         require => Exec["make_packages_${torque::version}"],
     }
 }
