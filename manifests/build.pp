@@ -4,6 +4,7 @@ class torque::build inherits torque {
     } else {
         $config_options = ""
     }
+    notify{"${configure_options}":}
 
     case $::osfamily {
         'RedHat': {
@@ -43,13 +44,15 @@ class torque::build inherits torque {
         command => "${torque::build_dir}/configure ${torque::config_options}",
         creates => "${torque::build_dir}/Makefile",
         cwd => $torque::build_dir,
-        require => Exec["download_src_${torque::version}"]
+        require => Exec["download_src_${torque::version}"],
+        notify  => Exec["make_${torque::version}"]
     }
     exec {"make_${torque::version}":
         command => "/usr/bin/make && /bin/touch ${torque::build_dir}/make_already_run",
         creates => "${torque::build_dir}/make_already_run",
         cwd => $torque::build_dir,
-        require => Exec["build_${torque::version}"]
+        require => Exec["build_${torque::version}"],
+        notify  => Exec["make_packages_${torque::version}"]
     }
 
     exec {"make_packages_${torque::version}":
