@@ -54,7 +54,7 @@ class torque::build inherits torque {
         command => "/usr/bin/make && /bin/touch ${torque::build_dir}/.make_${torque::version}_${norm_config_options}",
         creates => "${torque::build_dir}/.make_${torque::version}_${norm_config_options}",
         cwd => $torque::build_dir,
-        require => Exec["build_${torque::version}"],
+        require => Exec["configure_${torque::version}"],
         notify  => Exec["make_packages_${torque::version}"]
     }
 
