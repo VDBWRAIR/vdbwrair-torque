@@ -72,4 +72,26 @@ class torque::mom::config inherits torque::mom {
             require => Exec["/bin/mkdir -p ${torque::mom::options['tmpdir']}"]
         }
     }
+
+    if $with_pam {
+        pam { "enable_pam_pbssimpleauth":
+            ensure    => present,
+            service   => 'sshd',
+            type      => 'account',
+            control   => 'required',
+            module    => 'pam_pbssimpleauth.so',
+            arguments => 'debug',
+            position  => 'before *[type="account" and module="password-auth"]',
+            require   => Class['torque::mom::install']
+        }
+        pam { "enable_pam_access":
+            ensure    => present,
+            service   => 'sshd',
+            type      => 'account',
+            control   => 'required',
+            module    => 'pam_access.so',
+            position  => 'after *[type="account" and module="pam_pbssimpleauth.so"]',
+            require   => Pam['enable_pam_pbssimpleauth']
+        }
+    }
 }

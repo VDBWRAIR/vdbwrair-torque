@@ -9,6 +9,12 @@ class torque::build inherits torque {
     $norm_config_options = regsubst($config_options, "[^\w]|_", "", "G")
     notify{"${norm_config_options}":}
 
+    if grep($torque::configure_options, '--with-pam') {
+        $with_pam = true
+    } else {
+        $with_pam = false
+    }
+
     case $::osfamily {
         'RedHat': {
             $dev_packages = [
