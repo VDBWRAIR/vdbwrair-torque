@@ -4,9 +4,10 @@ class torque::build inherits torque {
     } else {
         $config_options = ""
     }
-    $normalized_options = regsubst($config_options, "[-=\s]", "", "G")
-    $config_sha = pw_hash($normalized_options, 'MD5', $torque::version)
     notify{"${configure_options}":}
+    $normalized_options = regsubst($config_options, "[-=\s]", "", "G")
+    notify{"${normalized_options}":}
+    $config_sha = pw_hash($normalized_options, 'MD5', $torque::version)
     notify{"${config_sha}":}
 
     case $::osfamily {
