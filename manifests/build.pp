@@ -43,8 +43,8 @@ class torque::build inherits torque {
         mode    => '0755',
         require => Exec["download_src_${torque::version}"]
     }
-    exec {"build_${torque::version}":
-        command => "${torque::build_dir}/configure ${torque::config_options} && /bin/touch ${torque::build_dir}/.configure_${torque::version}_${normalized_options}",
+    exec {"configure_${torque::version}":
+        command => "${torque::build_dir}/configure ${config_options} && /bin/touch ${torque::build_dir}/.configure_${torque::version}_${normalized_options}",
         creates => "${torque::build_dir}/.configure_${torque::build_dir}_${torque::version}_${normalized_options}",
         cwd => $torque::build_dir,
         require => Exec["download_src_${torque::version}"],
