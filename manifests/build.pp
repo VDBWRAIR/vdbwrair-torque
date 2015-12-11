@@ -4,6 +4,7 @@ class torque::build inherits torque {
     } else {
         $config_options = ""
     }
+    $config_sha = str2saltedsha512($config_options)
     notify{"${configure_options}":}
 
     case $::osfamily {
@@ -41,29 +42,29 @@ class torque::build inherits torque {
         require => Exec["download_src_${torque::version}"]
     }
     exec {"build_${torque::version}":
-        command => "${torque::build_dir}/configure ${torque::config_options}",
-        creates => "${torque::build_dir}/Makefile",
+        command => "${torque::build_dir}/configure ${torque::config_options} && /bin/touch ${torque::build_dir/.build_${torque::version}_${config_sha}",
+        creates => "${torque::build_dir}/.build_${torque::build_dir}_${torque::version}_${config_sha}",
         cwd => $torque::build_dir,
         require => Exec["download_src_${torque::version}"],
         notify  => Exec["make_${torque::version}"]
     }
     exec {"make_${torque::version}":
-        command => "/usr/bin/make && /bin/touch ${torque::build_dir}/make_already_run",
-        creates => "${torque::build_dir}/make_already_run",
+        command => "/usr/bin/make && /bin/touch ${torque::build_dir}/.make_${torque::version}_${config_sha}",
+        creates => "${torque::build_dir}/.make_${torque::version}_${config_sha}",
         cwd => $torque::build_dir,
         require => Exec["build_${torque::version}"],
         notify  => Exec["make_packages_${torque::version}"]
     }
 
     exec {"make_packages_${torque::version}":
-        command => "/usr/bin/make packages",
-        creates => "${torque::build_dir}/torque-package-clients-linux-x86_64.sh",
+        command => "/usr/bin/make packages && /bin/touch ${torque::build_dir}/.make_packages_${torque::version}_${config_sha}",
+        creates => "${torque::build_dir}/.make_packages_${torque::version}_${config_sha}",
         cwd => $torque::build_dir,
         require => Exec["make_${torque::version}"]
     }
     exec {"install_torque_docs_${torque::version}":
-        command => "${torque::build_dir}/torque-package-doc-linux-x86_64.sh --install && /bin/touch ${torque::build_dir}/torque_docs_installed",
+        command => "${torque::build_dir}/torque-package-doc-linux-x86_64.sh --install && /bin/touch ${torque::build_dir}/.torque_docs_${torque::version}_${config_sha}",
+        creates => "${torque::build_dir}/.torque_docs_${torque::version}_${config_sha}",
         require => Exec["make_packages_${torque::version}"],
-        creates => "${torque::build_dir}/torque_docs_installed",
     }
 }
