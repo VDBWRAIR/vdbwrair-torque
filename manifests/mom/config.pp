@@ -30,7 +30,7 @@ class torque::mom::config inherits torque::mom {
         ensure  => 'directory',
         owner   => 'root',
         group   => 'root',
-        mode    => '0751',
+        mode    => '0755', # Has to be 755 for pam_pbssimpleauth.so
         require => Class['torque::mom::install']
     }
 
@@ -56,7 +56,7 @@ class torque::mom::config inherits torque::mom {
         ensure => directory,
         owner  => root,
         group  => root,
-        mode   => '0751',
+        mode   => '0755', # Has to be 755 for pam_pbssimpleauth.so
         require => File["${torque::torque_home}/mom_priv"],
     }
 
@@ -93,5 +93,7 @@ class torque::mom::config inherits torque::mom {
             position  => 'after *[type="account" and module="pam_pbssimpleauth.so"]',
             require   => Pam['enable_pam_pbssimpleauth']
         }
+        # NEED TO INCLUDE CONVERT pam_pbssimpleauth.so.te to .pp file and
+        # run semodule -i on it
     }
 }
