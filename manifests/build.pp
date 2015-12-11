@@ -5,7 +5,7 @@ class torque::build inherits torque {
         $config_options = ""
     }
     notify{"${configure_options}":}
-    $normalized_options = regsubst($config_options, "[-=\s]", "", "G")
+    $normalized_options = regsubst($config_options, "[^\w]|_", "", "G")
     notify{"${normalized_options}":}
 
     case $::osfamily {
