@@ -72,7 +72,7 @@ class torque::mom::config inherits torque::mom {
         owner   => root,
         group   => root,
         mode    => '0755',
-        require => File["${torque::torque_home}/prologue.d"],
+        require => File["${torque::torque_home}/mom_priv/prologue.d"],
     }
 
     file { "${torque::torque_home}/mom_priv/epilogue.d":
@@ -87,7 +87,7 @@ class torque::mom::config inherits torque::mom {
         owner   => root,
         group   => root,
         mode    => '0755',
-        require => File["${torque::torque_home}/epilogue.d"],
+        require => File["${torque::torque_home}/mom_priv/epilogue.d"],
     }
 
     if $options['tmpdir'] {
