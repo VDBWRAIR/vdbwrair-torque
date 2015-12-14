@@ -4,10 +4,7 @@ class torque::build inherits torque {
     } else {
         $config_options = ""
     }
-    notify{"${configure_options}":}
-    notify{"${config_options}":}
     $norm_config_options = regsubst($config_options, "[^\w]|_", "", "G")
-    notify{"${norm_config_options}":}
 
     if grep($torque::configure_options, '--with-pam') {
         $with_pam = true
