@@ -72,6 +72,7 @@ class torque::mom::config inherits torque::mom {
         owner   => root,
         group   => root,
         mode    => '0755',
+        content => template('torque/prologue.erb'),
         require => File["${torque::torque_home}/mom_priv/prologue.d"],
     }
 
@@ -87,6 +88,7 @@ class torque::mom::config inherits torque::mom {
         owner   => root,
         group   => root,
         mode    => '0755',
+        content => template('torque/epilogue.erb'),
         require => File["${torque::torque_home}/mom_priv/epilogue.d"],
     }
 
