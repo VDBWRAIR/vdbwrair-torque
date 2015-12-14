@@ -14,4 +14,9 @@ class torque::mom::install inherits torque::mom {
             before  => Class['torque::config'],
         }
     }
+    if $with_pam {
+        package { ['policycoreutils','checkpolicy']:
+            ensure  => 'latest'
+        }
+    }
 }
