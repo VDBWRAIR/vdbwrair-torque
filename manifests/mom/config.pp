@@ -132,31 +132,31 @@ class torque::mom::config inherits torque::mom {
                         Augeas['ensure_deny_all_default_some_previous_rules'],
                 ]
         }
-	file { "/root/pam_pbssimpleauth.te":
-		ensure	=> file,
-		owner	=> root,
-		group	=> root,
-		mode	=> '0600',
-		source	=> 'puppet:///modules/torque/pam_pbssimpleauth.te',
-		notify	=> Exec['build_selinux_mod']
-	}
-	exec { "build_selinux_mod":
-		path	=> '/bin:/usr/bin:/usr/sbin',
-		command => 'checkmodule -M -m -o /root/pam_pbssimpleauth.mod /root/pam_pbssimpleauth.te',
-		creates => '/root/pam_pbssimpleauth.mod',
-		require	=> File['/root/pam_pbssimpleauth.te']
-	}
-	exec { "build_selinux_pp":
-		path	=> '/bin:/usr/bin:/usr/sbin',
-		command => 'semodule_package -o /root/pam_pbssimpleauth.pp -m /root/pam_pbssimpleauth.mod',
-		creates	=> '/root/pam_pbssimpleauth.pp',
-		require	=> Exec['build_selinux_mod']
-	}
-	exec { "install_selinux_pp":
-		path	=> '/bin:/usr/bin:/usr/sbin',
-		command => 'semodule -i /root/pam_pbssimpleauth.pp',
-		unless	=> 'semodule -l | grep pam_pbssimpleauth',
-		require	=> Exec['build_selinux_mod']
-	}
+        file { "/root/pam_pbssimpleauth.te":
+            ensure	=> file,
+            owner	=> root,
+            group	=> root,
+            mode	=> '0600',
+            source	=> 'puppet:///modules/torque/pam_pbssimpleauth.te',
+            notify	=> Exec['build_selinux_mod']
+        }
+        exec { "build_selinux_mod":
+            path	=> '/bin:/usr/bin:/usr/sbin',
+            command => 'checkmodule -M -m -o /root/pam_pbssimpleauth.mod /root/pam_pbssimpleauth.te',
+            creates => '/root/pam_pbssimpleauth.mod',
+            require	=> File['/root/pam_pbssimpleauth.te']
+        }
+        exec { "build_selinux_pp":
+            path	=> '/bin:/usr/bin:/usr/sbin',
+            command => 'semodule_package -o /root/pam_pbssimpleauth.pp -m /root/pam_pbssimpleauth.mod',
+            creates	=> '/root/pam_pbssimpleauth.pp',
+            require	=> Exec['build_selinux_mod']
+        }
+        exec { "install_selinux_pp":
+            path	=> '/bin:/usr/bin:/usr/sbin',
+            command => 'semodule -i /root/pam_pbssimpleauth.pp',
+            unless	=> 'semodule -l | grep pam_pbssimpleauth',
+            require	=> Exec['build_selinux_mod']
+        }
     }
 }
