@@ -136,7 +136,7 @@ class torque::mom::config inherits torque::mom {
 		owner	=> root,
 		group	=> root,
 		mode	=> '0600',
-		source	=> 'puppet:///torque/pam_pbssimpleauth.te',
+		source	=> 'puppet:///modules/torque/pam_pbssimpleauth.te',
 		notify	=> Exec['build_selinux_mod']
 	}
 	exec { "build_selinux_mod":
