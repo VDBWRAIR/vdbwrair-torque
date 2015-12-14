@@ -98,7 +98,7 @@ class torque::mom::config inherits torque::mom {
         augeas {"ensure_deny_all_default_no_previous_rules":
                 context => "/files/etc/security/access.conf",
                 changes => [
-                        'set access +',
+                        'set access -',
                         'set access/user ALL',
                         'set access/origin ALL',
                 ],
