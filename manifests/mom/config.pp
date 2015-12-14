@@ -125,7 +125,7 @@ class torque::mom::config inherits torque::mom {
                         "set access[last()-1]/group ${torque::mom::access_group}",
                         'set access[last()-1]/origin ALL'
                 ],
-                onlyif  => "match access[. = '+'][group = '${torque::::mom::access_group}'][origin = 'ALL'] size == 0",
+                onlyif  => "match access[. = '+'][group = '${torque::mom::access_group}'][origin = 'ALL'] size == 0",
                 require => [
                         Augeas['ensure_deny_all_default_no_previous_rules'],
                         Augeas['ensure_deny_all_default_some_previous_rules'],
