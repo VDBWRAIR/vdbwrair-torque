@@ -110,6 +110,7 @@ class torque::mom::config inherits torque::mom {
                 changes => [
                         'ins access after access[last()]',
                         'set access[last()] -',
+                        'set access[last()]/user root',
                         'set access[last()]/group ALL',
                         'set access[last()]/origin ALL'
                 ],
