@@ -78,7 +78,7 @@ class torque::mom::config inherits torque::mom {
             ensure    => present,
             service   => 'sshd',
             type      => 'account',
-            control   => 'required',
+            control   => 'sufficient',
             module    => 'pam_pbssimpleauth.so',
             arguments => 'debug',
             position  => 'before *[type="account" and module="password-auth"]',
@@ -92,6 +92,44 @@ class torque::mom::config inherits torque::mom {
             module    => 'pam_access.so',
             position  => 'after *[type="account" and module="pam_pbssimpleauth.so"]',
             require   => Pam['enable_pam_pbssimpleauth']
+        }
+        # insert blanket deny all
+        # No entries in access.conf
+        augeas {"ensure_deny_all_default_no_previous_rules":
+                context => "/files/etc/security/access.conf",
+                changes => [
+                        'set access +',
+                        'set access/user ALL',
+                        'set access/origin ALL',
+                ],
+                onlyif  => "match access size == 0"
+        }
+        # > 0 entries in access.conf
+        augeas {"ensure_deny_all_default_some_previous_rules":
+                context => "/files/etc/security/access.conf",
+                changes => [
+                        'ins access after access[last()]',
+                        'set access[last()] -',
+                        'set access[last()]/group ALL',
+                        'set access[last()]/origin ALL'
+                ],
+                onlyif  => "match access[. = '-'][user = 'ALL'][origin = 'ALL'] size == 0"
+        }
+
+        # If group entry doesn't exist
+        augeas {"ensure_${torque::mom::access_group}_access":
+                context => "/files/etc/security/access.conf",
+                changes => [
+                        'ins access before access[last()]',
+                        'set access[last()-1] +',
+                        "set access[last()-1]/group ${torque::mom::access_group}",
+                        'set access[last()-1]/origin ALL'
+                ],
+                onlyif  => "match access[. = '+'][group = '${torque::::mom::access_group}'][origin = 'ALL'] size == 0",
+                require => [
+                        Augeas['ensure_deny_all_default_no_previous_rules'],
+                        Augeas['ensure_deny_all_default_some_previous_rules'],
+                ]
         }
         # NEED TO INCLUDE CONVERT pam_pbssimpleauth.so.te to .pp file and
         # run semodule -i on it

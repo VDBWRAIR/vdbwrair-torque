@@ -36,6 +36,9 @@ class torque::params {
     $mom_service_options        = [
         "-L /var/log/torque/pbs_mom.log"
     ]
+    # Group to be added to /etc/security/access.conf to
+    # allow access to
+    $mom_access_group           = 'wheel'
 
     ## Server
     # Options from pbs_server_attributes man page
