@@ -60,6 +60,36 @@ class torque::mom::config inherits torque::mom {
         require => File["${torque::torque_home}/mom_priv"],
     }
 
+    file { "${torque::torque_home}/mom_priv/prologue.d":
+        ensure  => directory,
+        owner   => root,
+        group   => root,
+        mode    => '0711',
+        require => File["${torque::torque_home}/mom_priv"],
+    }
+    file { "${torque::torque_home}/mom_priv/prologue":
+        ensure  => file,
+        owner   => root,
+        group   => root,
+        mode    => '0755',
+        require => File["${torque::torque_home}/prologue.d"],
+    }
+
+    file { "${torque::torque_home}/mom_priv/epilogue.d":
+        ensure  => directory,
+        owner   => root,
+        group   => root,
+        mode    => '0711',
+        require => File["${torque::torque_home}/mom_priv"],
+    }
+    file { "${torque::torque_home}/mom_priv/epilogue":
+        ensure  => file,
+        owner   => root,
+        group   => root,
+        mode    => '0755',
+        require => File["${torque::torque_home}/epilogue.d"],
+    }
+
     if $options['tmpdir'] {
         exec {"/bin/mkdir -p ${torque::mom::options[tmpdir]}":
             unless => "/usr/bin/test -d ${torque::mom::options[tmpdir]}"
