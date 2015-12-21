@@ -3,12 +3,12 @@ $logevent <%= @options['logevent'] %>
 <%- if !@options.empty? -%>
     <%- @options.keys.sort.each do |key|
         unless %w(logevent ideal_load max_load).include? key -%>
-        $<%= key %> <%= @options[key] %>
+$<%= key %> <%= @options[key] %>
         <%- end -%>
     <%- end -%>
 <%- end -%>
 <%- if @usecp -%>
   <%- @usecp.each do |dir| -%>
-  $usecp <%= dir %>
+$usecp <%= dir %>
   <%- end -%>
 <%- end -%>
