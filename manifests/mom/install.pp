@@ -19,4 +19,13 @@ class torque::mom::install inherits torque::mom {
             ensure  => 'latest'
         }
     }
+    # If xauthpath specified for pbs_mom options
+    if $options['xauthpath'] {
+        # If --with-xauth not specified during build
+        if empty($withxauth) {
+            package { 'xorg-x11-xauth':
+                ensure => 'latest'
+            }
+        }
+    }
 }

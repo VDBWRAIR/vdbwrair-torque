@@ -34,6 +34,14 @@ class torque::build inherits torque {
         content => template('torque/uninstall.sh.erb')
     }
 
+    if grep($torque::configure_options, '--with-xauth') {
+        $withxauth = true
+        package { "xorg-x11-xauth":
+            ensure  => present,
+            before  => Exec["configure_${torque::version}"]
+        }
+    }
+
     exec {"download_src_${torque::version}":
         command => "/usr/bin/wget ${torque::download_url} -O- | /bin/tar xzvf -",
         creates => "${torque::build_dir}/INSTALL",
