@@ -7,6 +7,8 @@ $<%= key %> <%= @options[key] %>
   <% end -%>
 <% end -%>
 <% end -%>
-<% if @usecp -%><% @usecp.each do |dir| -%>
-$usecp <%= dir %><% end -%>
+<% if @usecp -%>
+  <% @usecp.each do |dir| -%>
+  $usecp <%= dir %>
+  <% end -%>
 <% end -%>
