@@ -40,6 +40,8 @@ class torque::build inherits torque {
             ensure  => present,
             before  => Exec["configure_${torque::version}"]
         }
+    } else {
+        $withxauth = false
     }
 
     exec {"download_src_${torque::version}":
