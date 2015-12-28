@@ -1,1 +1,1 @@
-<%= @fqdn %> np=<%= @processors['count'] %>
+<%= @fqdn %> np=<%= @processors['count'] %> <% if ! @gpu_info.empty? %>gpus=<%= @gpu_info.size %><% endif %>
